@@ -15,7 +15,6 @@
 " :PlugStatus	                      - Check the status of plugins
 " :PlugDiff	                          - Examine changes from the previous update and the pending changes
 " :PlugSnapshot[!] [output path]	  - Generate script for restoring the current snapshot of the plugins
-"
 " See also vim-plug official website: https://github.com/junegunn/vim-plug
 "..................................................
 "let s:vimdatapath=''
@@ -80,7 +79,32 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 "" different version somewhere else.
 "Plug 'ascenator/L9', {'name': 'newL9'}
 
-Plug 'scrooloose/nerdtree'
+" See also: https://github.com/scrooloose/nerdtree
+" NERD tree will be loaded on the first invocation of NERDTreeToggle command
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+"Plug 'scrooloose/nerdtree'
+
+" A plugin of NERDTree showing git status
+" Use this variable to change symbols:
+" let g:NERDTreeIndicatorMapCustom = {
+"     \ 'Modified'  : '✹',
+"     \ 'Staged'    : '✚',
+"     \ 'Untracked' : '✭',
+"     \ 'Renamed'   : '➜',
+"     \ 'Unmerged'  : '═',
+"     \ 'Deleted'   : '✖',
+"     \ 'Dirty'     : '✗',
+"     \ 'Clean'     : '✔︎',
+"     \ 'Ignored'   : '☒',
+"     \ 'Unknown'   : '?'
+"     \ }
+" See also: https://github.com/Xuyuanp/nerdtree-git-plugin
+Plug 'Xuyuanp/nerdtree-git-plugin'
+
+" Extra syntax and highlight for nerdtree files
+" This adds syntax for nerdtree on most common file extensions or file types
+" See also: https://github.com/tiagofumo/vim-nerdtree-syntax-highlight
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 
 " 下面的插件需先安装powerline、airline专用字体，安装方法：
 " https://github.com/powerline/fonts#installation
@@ -417,12 +441,11 @@ call plug#end()"
 "..................................................
 " :PlugInstall [name ...] [#threads]  - Install plugins
 " :PlugUpdate [name ...] [#threads]	  - Install or update plugins
-
+" :PlugClean[!]                       - Remove unused directories (bang version will clean without prompt)
 " :PlugUpgrade	                      - Upgrade vim-plug itself
 " :PlugStatus	                      - Check the status of plugins
 " :PlugDiff	                          - Examine changes from the previous update and the pending changes
 " :PlugSnapshot[!] [output path]	  - Generate script for restoring the current snapshot of the plugins
-"
 " see also vim-plug official website: https://github.com/junegunn/vim-plug
 "..................................................
 
@@ -1738,9 +1761,12 @@ nnoremap <LEADER>m  `m
 " 另外，本方法在遇到斜杠/这样的特殊字符时，无法达到目的，
 " 即使使用<C-R><C-R>也不行
 vnoremap f y/<C-R>0<CR>
-"---------------------------------------------------------------------
-"NOTE 以下部分的键盘映射需要脚本或插件支持，不适用于ideavim和vsvim
-"---------------------------------------------------------------------
+
+"-----------------------------------------------------------------------
+"-----------------------------------------------------------------------
+"NOTE NOTE 以下部分的键盘映射需要脚本或插件支持，不适用于ideavim和vsvim
+"-----------------------------------------------------------------------
+"-----------------------------------------------------------------------
 "noremap * :call VisualSelectionArthurChiao('SearchForward', '')<CR>
 "noremap # :call VisualSelectionArthurChiao('SearchBackward', '')<CR>
 " <C-R>，命令行模式下插入寄存器中的内容；<C-R>/，插入搜索模式寄存器的内容
@@ -1799,7 +1825,33 @@ noremap \ :call bufferhint#Popup()<CR>
 noremap \| :call bufferhint#LoadPrevious()<CR>
 
 " 打开NERDTree
-map <LEADER>n :NERDTree<CR>
+"map <LEADER>n :NERDTree<CR>
+map <LEADER>n :NERDTreeToggle<CR>
+" Open a NERDTree automatically when vim starts up if no files were specified:
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" Close vim if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") &&
+            \ b:NERDTree.isTabTree()) | q | endif
+"" NERDTress File highlighting
+"function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
+" exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .'
+"            \  ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+" exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+"endfunction
+"call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
+"call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
+"call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
+"call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
+"call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
+"call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
+"call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
+"call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
+"call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
+"call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
+"call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
+"call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
+"call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
 
 " easymotion变量及快捷键映射
 map <LEADER><LEADER>h <Plug>(easymotion-linebackward)
