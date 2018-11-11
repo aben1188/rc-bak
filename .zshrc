@@ -201,15 +201,15 @@ alias ggrnin="grep -rniC1 --color=auto --include"
 alias ng="netstat -anpt|grep"
 # 查看指定的网络相关信息(不区分大小写)，如连接、端口、路由表等
 alias ngi="netstat -anpt|grep -i"
-# 从根目录开始递归查找指定的文件名(区分大小写)
-alias fn="find / -name"
-# 从根目录开始递归查找指定的文件名(不区分大小写)
-alias fin="find / -iname"
-# 从根目录开始(但排除指定目录)递归查找指定的文件名(不区分大小写)
-alias finn="find / -iname ! -path '/proc/*' ! -path '/sys/*'"
-
 # 使用find查找文件时，对于没有查询权限的目录会不断出现Permission denied，导致不容易看到正确的查询结果，
 # 而Permission denied属于错误，将错误(0为标准输入，1为标准输出，2为标准错误)重定向到黑洞文件/dev/null即可
+# 从根目录开始递归查找指定的文件名(区分大小写)
+alias fn="find / -name $@ 2>/dev/null"
+# 从根目录开始递归查找指定的文件名(不区分大小写)
+alias fin="find / -iname $@ 2>/dev/null"
+# 从根目录开始(但排除指定目录)递归查找指定的文件名(不区分大小写)
+alias finn="find / -iname $@ 2>/dev/null ! -path '/proc/*' ! -path '/sys/*'"
+# 从根目录开始查找指定inode号的文件
 alias fim="find / -inum $@ 2>/dev/null"
 # 快速查找文件(默认为全局查找，即默认为相当于从根目录开始递归查找)（区分大小写）
 alias l="locate"
