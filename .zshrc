@@ -98,7 +98,11 @@ plugins=(
     icdiff
     httpie
     mycli
+    # 很遗憾，incr还是有些问题，只能弃用之，还是多敲一次Tab键吧
     #incr
+    # 注：auto-fu是一个很酷的命令及参数自动实时展示插件，但会导致vi-mode、ctrl-r
+    # 等失效，还是使用incr插件部分代替其功能(实际上auto-fu就是基于incr开发的)，
+    # 以及多按一些Tab键以使用zsh的自动展示与自动补全功能吧
     #auto-fu
     history-substring-search
 )
@@ -163,13 +167,17 @@ alias tm="trash-rm"
 #            the Trash directory, instead of the default: ~/.local/share/Trash.
 # 参见：https://github.com/bneijt/autotrash
 
+# 为了使得后面定义的其他命令的别名在sudo时也能生效，必须设置sudo为“alias sudo='sudo '”，
+# 具体可参考这里：https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
+alias sudo='sudo '
+
 alias vi='vim'
 alias vz="vim ~/.zshrc"
 alias sz="source ~/.zshrc"
 alias vb="vim ~/.bashrc"
 #alias vv='vim /etc/vimrc'
 alias vv='vim ~/.vimrc'
-alias vvb='vim ~/rc-bak/.vimrc'
+alias vvb='vim /bak/rc-bak/.vimrc'
 
 if [[ $USER == "root" ]] then
     alias tpzswp="tp ~/.vim/swapfiles/%$USER%.zshrc.swp"
@@ -184,9 +192,10 @@ alias ll='ls --color -ail'
 alias la='ls --color -ai'
 # 【特别注意：g开头的别名，不要与下面同样是g开头的git别名相冲突了！】
 # -C1：同时只显示匹配行的前后各1行
-alias gg="grep -C1 --color=auto"
+# -n：输出行号
+alias gg="grep -nC1 --color=auto"
 # -i：不区分大小(即大小写不敏感)
-alias ggi="grep -iC1 --color=auto"
+alias ggi="grep -niC1 --color=auto"
 # 递归查找文件内容(区分大小写)
 # -r：递归查找当前文件夹及其子文件夹
 alias ggrn="grep -rnC1 --color=auto"
@@ -197,13 +206,26 @@ alias ggrni="grep -rniC1 --color=auto"
 #       grep -rn --include='*.[ch]' re
 alias ggrnn="grep -rnC1 --color=auto --include"
 alias ggrnin="grep -rniC1 --color=auto --include"
+
+
+# 查看所有的网络相关信息，如连接、端口、路由表等
+alias nsa="netstat -an"
+# 仅查看有在监听(listen)的网络相关信息，如连接、端口、路由表等
+alias nsl="netstat -ln"
+# 查看所有tcp连接的网络相关信息，如连接、端口、路由表等
+alias nsat="netstat -atn"
+# 查看所有udp连接的网络相关信息，如连接、端口、路由表等
+alias nsau="netstat -aun"
+# 查看所有tcp、udp连接的网络相关信息，如连接、端口、路由表等
+alias nsatu="netstat -atun"
 # 查看指定的网络相关信息(区分大小写)，如连接、端口、路由表等
-alias ng="netstat -anpt|grep"
+alias nsg="netstat -anpt|grep -nC1 --color=auto"
 # 查看指定的网络相关信息(不区分大小写)，如连接、端口、路由表等
-alias ngi="netstat -anpt|grep -i"
+alias nsgi="netstat -anpt|grep -niC1 --color=auto"
 # 使用find查找文件时，对于没有查询权限的目录会不断出现Permission denied，导致不容易看到正确的查询结果，
 # 而Permission denied属于错误，将错误(0为标准输入，1为标准输出，2为标准错误)重定向到黑洞文件/dev/null即可
 # 从根目录开始递归查找指定的文件名(区分大小写)
+# 注：$@代表全部参数
 alias fn="find / -name $@ 2>/dev/null"
 # 从根目录开始递归查找指定的文件名(不区分大小写)
 alias fin="find / -iname $@ 2>/dev/null"
@@ -219,13 +241,22 @@ alias ul="updatedb && locate"
 alias li="locate -i"
 # 先更新搜索数据库，再快速查找文件(默认为全局查找，即默认为相当于从根目录开始递归查找)（不区分大小写）
 alias uli="updatedb && locate -i"
+# 树状形式显示所有进程信息(p代表ps，t代表tree)
+alias pt='ps axjf'
+# 树状形式查看指定的进程状态(区分大小写)
+# 注：grep -v grep——排除掉grep本身的进程信息
+alias ptg="pt|grep -v grep|grep -nC1 --color=auto"
+# 树状形式查看指定的进程状态(不区分大小写)
+alias ptgi="pt|grep -v grep|grep -niC1 --color=auto"
 # 查看指定的进程状态(区分大小写)
-alias pg="ps aux|grep"
+alias pg="ps aux|grep -v grep|grep -nC1 --color=auto"
 # 查看指定的进程状态(不区分大小写)
-alias pgi="ps aux|grep -i"
+alias pgi="ps aux|grep -v grep|grep -niC1 --color=auto"
 # 查看当前系统用户列表：vul = view user list
 alias vul="cat /etc/passwd|grep -v nologin|grep -v halt|grep -v shutdown"
 alias vula="cat /etc/passwd|grep -v nologin|grep -v halt|grep -v shutdown|awk -F\":\" '{ print $1\"|\"$3\"|\"$4 }'|more"
+
+alias k9="kill -9"
 
 # git命令别名【特别注意：g开头的git别名不要与上面同样是g开头的其他别名相冲突了！】
 alias ga="git add"
@@ -460,6 +491,18 @@ echormhint() {
 
 }
 
+# 运行这个函数从GitHub的the-art-of-command-line(命令行的艺术)文档中随机获取一条技巧
+# （解析 Markdown 文件并抽取项目）
+# 参见：https://github.com/jlevy/the-art-of-command-line/blob/master/README-zh.md
+function taocl() {
+  curl -s https://raw.githubusercontent.com/jlevy/the-art-of-command-line/master/README-zh.md|
+    pandoc -f markdown -t html |
+    iconv -f 'utf-8' -t 'unicode' |
+    xmlstarlet fo --html --dropdtd |
+    xmlstarlet sel -t -v "(html/body/ul/li[count(p)>0])[$RANDOM mod last()+1]" |
+    xmlstarlet unesc | fmt -80
+}
+
 # myrm(){
 #    # 判断目录是不是已经存在，如果不存在则创建，存在则输出“dir exist”
 #    #recycle_bin_dir='~/.RecycleBin'
@@ -509,3 +552,6 @@ source ~/.fzf/shell/zsh-interactive-cd.plugin.zsh
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"

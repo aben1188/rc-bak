@@ -1,4 +1,4 @@
-" Vim启动时，若加上--startuptime参数，可查看其启动加载过程中每一步所耗费的 
+" 注：Vim启动时，若加上--startuptime参数，可查看其启动加载过程中每一步所耗费的 
 " 详细时间以及耗费的总时间：
 "     vim --startuptime 'vimStartupTime.txt' 
 
@@ -1477,12 +1477,12 @@ noremap k <C-Y>gk
 " go to older jump position(contrast with Tab or C-I)
 noremap <S-TAB> <C-O>
 
-" 命令模式下，移动到当前行行首、行尾、行中
-nnoremap <C-H> ^
-nnoremap <C-L> $
-nnoremap  0    ^
-nnoremap  -    :call cursor(line("."), col("$")/2)<CR>
-nnoremap  =    $
+" n、v、s、o模式下，移动到当前行行首、行尾、行中
+noremap <C-H> ^
+noremap <C-L> $
+noremap  0    ^
+noremap  -    :call cursor(line("."), col("$")/2)<CR>
+noremap  =    $
 
 " n、v、s、o模式下注释当前行
 " 注意：在vim中，Ctrl-/(正斜杠)是无效的，因此以小键盘的/（kDivide）代替,
@@ -1594,12 +1594,6 @@ map <F6> :edit $MYVIMRC<CR>
 "" 按<Tab>缩进，按<S-Tab>反缩进
 "noremap <Tab>   >>  |" <Tab>与Vim原生定义(即默认定义)的跳转功能冲突
 "noremap <S-Tab> <<
-
-"" 插入模式下快捷输入$（php中的变量前面必须有$，输入很频繁）
-"inoremap ss $
-inoremap <A-S> $  |" Linux中貌似无效
-"inoremap `     ->
-"inoremap ~     =>
 
 " 普通模式下，Ctrl-A全选映射为ggVG（Ctrl-A本为IDE快捷键，但在IdeaVim中无法
 " 实现覆盖全选内容（即全选后无法删除全选内容后粘贴，但可用<LEADER><LEADER>c
