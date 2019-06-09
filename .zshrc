@@ -33,7 +33,6 @@ unsetopt RM_STAR_SILENT
 #ZSH_THEME="robbyrussell"
 ZSH_THEME="avit"
 
-
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
@@ -145,6 +144,12 @@ source $ZSH/oh-my-zsh.sh
 # 来看下可能将删除哪些文件，这在使用*通配符删除文件时尤其有用）
 alias rm='echo_rm_hint'
 
+# 为了使得后面定义的其他命令的别名在sudo时也能生效，必须设置sudo为“alias sudo='sudo '”，
+# 具体可参考这里：https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
+alias sudo='sudo '
+
+alias mkcd='mcd'
+
 # 使用trash-cli来代替rm命令，参见：https://github.com/andreafrancia/trash-cli
 # trash files and directories
 alias tp="trash-put"
@@ -169,10 +174,6 @@ alias tm="trash-rm"
 #         2）-T PATH --trash-path PATH : Use the given path as the location of
 #            the Trash directory, instead of the default: ~/.local/share/Trash.
 # 参见：https://github.com/bneijt/autotrash
-
-# 为了使得后面定义的其他命令的别名在sudo时也能生效，必须设置sudo为“alias sudo='sudo '”，
-# 具体可参考这里：https://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
-alias sudo='sudo '
 
 alias vi='vim'
 alias vz="vim ~/.zshrc"
@@ -268,11 +269,21 @@ alias vula="cat /etc/passwd|grep -v nologin|grep -v halt|grep -v shutdown|awk -F
 # 注：应该总是优先使用15信号(TERM信号)，这也是kill命令的默认信号，即不指定信号则默认使用15信号(TERM信号)；
 #     发送15信号后，等一两秒钟，如果没效果，发送2信号(INT信号)，还不行则发送1信号(HUP信号)，万不得已才用
 #     9信号(KILL信号)
+#     也就是说，杀死进程最安全的方法是单纯使用kill命令，不加修饰符，不带标志，如使用ps -ef|grep process-name命令
+#     确定要杀死进程的PID，然后输入以下命令：
+#         kill PID  或以优雅的方式结束进程：
+#         kill -l PID  # -l选项告诉kill命令用好像启动进程的用户已注销的方式来结束进程。当使用该选项时，
+#                      # kill命令也试图杀死所留下的子进程。但这个命令也不是总能成功--或许仍然需要先手工
+#                      # 杀死子进程，然后再杀死父进程。
+#         注意：标准的kill命令通常都能达到目的。终止有问题的进程，并把进程的资源释放给系统。然而，如果进程
+#               启动了子进程，只杀死父进程，子进程仍可能在运行，因此仍消耗资源。为防止这些所谓的“僵尸进程”，
+#               应确保在杀死父进程之前，先杀死其所有的子进程。
 # 注：pkill命令与killall命令类似，都用于杀死指定名字的进程（kill processes by name）。
 #     不同之处在于，pkill默认使用正则进行模糊匹配，而killall默认使用文本进行精确匹配。
 #     因此，killall对于盲目复制和粘贴的用户而言更为安全。而从两个命令各自的选项功能来看则各有所长，详见各自帮助信息。
-alias ka="killall -viI"
-alias k9="kill -9"
+alias ka="killall -viI"  # 注：killall命令的进程参数为进程名称(Process Name)，可一次处理同样名称的所有进程
+# 注意：9信号应慎用！
+alias k9="kill -9"  # 注：kill命令的进程参数为进程ID(即PID，Process ID)，一次只能处理一个进程
 
 # 动态跟踪监控文件变化，用于在shell中实时查看日志非常方便
 alias tf="tail -F -n 20"
@@ -280,8 +291,9 @@ alias tf="tail -F -n 20"
 # 使用grep查找文件内容时，对于没有查询权限的文件会不断出现Permission denied，导致不容易看到正确的查询结果，
 # 而Permission denied属于错误，将错误(0为标准输入，1为标准输出，2为标准错误)重定向到黑洞文件/dev/null即可
 # 【特别注意：g开头的别名，不要与下面同样是g开头的git别名相冲突了！(注：部分别名覆盖了git插件定义的别名)】
-# -C1：同时只显示匹配行的前后各1行
 # -n：输出行号
+# -C1：同时只显示匹配行的前后各1行
+# -E：egrep, Extended grep（即egrep = grep -E）
 alias gg="grep -nC1 -E --color=auto $@ 2>/dev/null"  # 覆盖了git插件所定义的别名：gg="git gui citool"
 # -i：不区分大小(即大小写不敏感)
 alias ggi="grep -niC1 -E --color=auto $@ 2>/dev/null"
@@ -290,7 +302,9 @@ alias ggi="grep -niC1 -E --color=auto $@ 2>/dev/null"
 alias ggr="grep -rnC1 -E --color=auto $@ 2>/dev/null"
 # 递归查找文件内容(不区分大小写)
 alias ggri="grep -rniC1 -E --color=auto $@ 2>/dev/null"
-alias ggrio="grep -rni -oE --color=auto $@ 2>/dev/null"
+# -o：只输出匹配正则表达式的字符串，而非输出整个匹配行(gnu新版独有, 并非所有版本都支持)
+#     该选项仅显示匹配行中与正则表达式PATTERN相匹配的字符串
+alias ggrio="grep -rniC1 -oE --color=auto $@ 2>/dev/null"
 # 递归查找文件内容(不区分大小写，且只在指定文件类型中查找)
 # 比如：grep -rn --include='*.c' --include='*.h' re  或写作：
 #       grep -rn --include='*.[ch]' re
@@ -301,7 +315,7 @@ alias ggrin="grep -rniC1 -E --color=auto --include $@ 2>/dev/null"
 # -------------------------------------------------------------------------------
 # 以下为zsh的git插件所定义的git别名
 # （参见：https://github.com/robbyrussell/oh-my-zsh/wiki/Plugin:git）
-# -------------------------------------------------------------------------------
+# -------------------------------------------------------------------
 # g	                    git
 # ga	                git add
 # gaa	                git add --all
@@ -361,7 +375,7 @@ alias ggrin="grep -rniC1 -E --color=auto --include $@ 2>/dev/null"
 # git-svn-dcommit-push	git svn dcommit && git push github master:svntrunk
 # gk	                \gitk --all --branches
 # gke	                \gitk --all $(git log -g --pretty = format:%h)
-# gl	                git pull
+# gl	                git pull  # 注：下面还同时自定义了gpl="git pull"
 # glg	                git log --stat --color
 # glgg	                git log --graph --color
 # glgga	                git log --graph --decorate --all
@@ -393,7 +407,7 @@ alias ggrin="grep -rniC1 -E --color=auto --include $@ 2>/dev/null"
 # grbs	                git rebase --skip
 # grh	                git reset HEAD
 # grhh	                git reset HEAD --hard
-# grmv	                git remote rename
+# grmv	                git remote rename  # 注：下面还同时自定义了grrn="git remote rename"
 # grrm	                git remote remove
 # grset	                git remote set-url
 # grt	                cd $(git rev-parse --show-toplevel || echo ".")
@@ -406,7 +420,7 @@ alias ggrin="grep -rniC1 -E --color=auto --include $@ 2>/dev/null"
 # gsps	                git show --pretty = short --show-signature
 # gsr	                git svn rebase
 # gss	                git status -s
-# gst	                git status
+# gst	                git status  # 注：下面还同时自定义了gs="git status"
 # gsta	                git stash save
 # gstaa	                git stash apply
 # gstd	                git stash drop
@@ -425,34 +439,37 @@ alias ggrin="grep -rniC1 -E --color=auto --include $@ 2>/dev/null"
 # gwch	                git whatchanged -p --abbrev-commit --pretty = medium
 # gwip	                git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit -m "--wip--"
 # ----------------------------------------------------------
-# 下面定义的别名，会覆盖上面的git插件定义的同名别名
+# 下面为自定义的git别名，会覆盖上面的git插件定义的同名别名
 # （注：被注释的别名，与git插件定义的别名重复）
 # ----------------------------------------------------------
-#alias ga="git add"
+#alias ga="git add"  # 注：上面已定义了同名别名
 alias gai="git add .ideavimrc"
-#alias gb="git branch"
-#alias gc="git commit"
-alias gcl="git clone"  # 注：覆盖了git插件的git clone --recursive
+#alias gb="git branch"  # 注：上面已定义了同名别名
+#alias gc="git commit"  # 注：上面已定义了同名别名
+alias gcl="git clone"  # 注：覆盖了上面定义的git clone --recursive（以下行定义的gclr代替）
 alias gclr="git clone --recursive"
-#alias gco="git checkout"
-#alias gd="git diff"
-#alias gf="git fetch"
+#alias gco="git checkout"  # 注：上面已定义了同名别名
+#alias gd="git diff"  # 注：上面已定义了同名别名
+#alias gf="git fetch"  # 注：上面已定义了同名别名
 alias gi="git init"
 alias gl="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-#alias gm="git merge"
+#alias gm="git merge"  # 注：上面已定义了同名别名
 alias gps="git push"
 alias gpsom="git push origin master"
-alias gpl="git pull"
+alias gpl="git pull"  # 注：上面同时还定义了gl="git pull"
 alias gplom="git pull origin master"
 alias grs="git reset"
-#alias grb="git rebase"
-alias grv="git revert"  # 注：覆盖了git插件的git remote -v
-alias grm="git remote -v"
+#alias grb="git rebase"  # 注：上面已定义了同名别名
+alias grt="git revert"
+alias grm="git rm"
+alias grmc="git rm --cached -r"  # -r，递归删除
+alias grmcf="git rm --cached --force -r"
+alias grrn="git remote rename"  # 注：上面同时还定义了grmv="git remote rename"
 #origin一般习惯指向上位仓库(即上游仓库，比如github中的仓库)（可在各个git仓库的配置文件.git/config中修改）
-alias grmao="git remote add origin"
+alias grao="git remote add origin"
 #condingnet指的是码市conding.net
-alias grmac="git remote add codingnet"
-alias gs="git status"
+alias grac="git remote add codingnet"
+alias gs="git status"  # 注：上面同时还定义了gst="git status"
 alias gssb="git status -sb"
 alias gsb="git submodule"  # 注：覆盖了git插件的git status -sb
 alias gsh="git show"
@@ -616,6 +633,8 @@ vf() {
   local file
 
   # 更新locate索引数据库
+  # 【【注意：在某些情况下(比如安装了大量软件之后)，updatedb的过程可能会耗时较长(从几秒到几十秒不等)，
+  # 这时可通过另开一个终端会话窗口的办法来规避】】
   sudo updatedb
 
   # locate -Ai -0 $@：
