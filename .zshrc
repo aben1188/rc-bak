@@ -471,7 +471,7 @@ alias grao="git remote add origin"
 alias grac="git remote add codingnet"
 alias gs="git status"  # 注：上面同时还定义了gst="git status"
 alias gssb="git status -sb"
-alias gsb="git submodule"  # 注：覆盖了git插件的git status -sb
+alias gsb="git submodule"  # 注：覆盖了上面定义的git status -sb
 alias gsh="git show"
 alias gt="git tag"
 
