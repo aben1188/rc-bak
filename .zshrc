@@ -94,24 +94,36 @@ ZSH_THEME="avit"
 plugins=(
     # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugin:git
     git
+    # dircycle插件功能：可使用Ctrl+Shift+left/right在目录之间来回移动
     dircycle
+    # dirhistory插件功能：可用ALT-LEFT移动到用户过去更改的目录，ALT-RIGHT撤消ALT-LEFT，
+    # ALT-UP移动到上层目录(相当于“cd ..”)，ALT-DOWN移动到按字母顺序找到的第一个目录
     dirhistory
+    # dirpersist插件功能：此插件保留$HOME/.zdirs文件中前20个唯一目录(即不重复)的运行记录。
+    # 当转到新目录时，该新目录会被添加到$HOME/.zdirs文件的开头。 要使用该插件，必须将
+    # dirpersist添加到.zshrc文件中的plugins数组中。
     dirpersist
     vi-mode
     autojump
     #ack
     zsh-autosuggestions
+    zsh-completions
     zsh-syntax-highlighting
-    icdiff
+    # zsh-history-substring-search必须在zsh-syntax-highlighting之后启用
+    #zsh-history-substring-search  # history-substring-search为其别名
+    history-substring-search  #已经自带，不需要安装
+    fzf
+    # zsh-interactive-cd插件实际上不是oh-my-zsh的插件，因此不需要在这里启用
+    #zsh-interactive-cd  # 该插件基于fzf，必须先安装fzf
+    #icdiff
     httpie
-    mycli
+    #mycli
     # 很遗憾，incr还是有些问题，只能弃用之，还是多敲一次Tab键吧
     #incr
     # 注：auto-fu是一个很酷的命令及参数自动实时展示插件，但会导致vi-mode、ctrl-r
     # 等失效，还是使用incr插件部分代替其功能(实际上auto-fu就是基于incr开发的)，
     # 以及多按一些Tab键以使用zsh的自动展示与自动补全功能吧
     #auto-fu
-    history-substring-search
 )
 
 source $ZSH/oh-my-zsh.sh
