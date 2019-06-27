@@ -108,8 +108,9 @@ plugins=(
     dirpersist
     # 参见：https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/vi-mode
     vi-mode
+    # autojump插件可用基于fzf自定义的命令(函数)cf代替，可不必安装
     # 参见：https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/autojump
-    autojump
+    #autojump
     #ack
     # 以下四个插件均来自：https://github.com/zsh-users
     zsh-autosuggestions
@@ -120,7 +121,7 @@ plugins=(
     history-substring-search  #已经自带，不需要安装
     # 参见：https://github.com/junegunn/fzf
     fzf
-    # zsh-interactive-cd插件实际上不是oh-my-zsh的插件，因此不需要在这里启用
+    # zsh-interactive-cd插件实际上不是oh-my-zsh的插件，因此不需要在这里启用（后文另有启用命令）
     # 参见：https://github.com/changyuheng/zsh-interactive-cd
     #zsh-interactive-cd  # 该插件基于fzf，必须先安装fzf
     # 参见：https://link.zhihu.com/?target=https%3A//github.com/jeffkaufman/icdiff
@@ -170,6 +171,8 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# 【注意：别名仅在交互式shell环境中有效，在非交互式shell环境中(比如shell脚本中)则无效】
+
 # 默认情况下不允许直接使用rm命令
 # （注：当确实需要使用rm命令来删除文件时，可先通过执行echo rm <*或文件名>
 # 来看下可能将删除哪些文件，这在使用*通配符删除文件时尤其有用）
@@ -181,7 +184,13 @@ alias sudo='sudo '
 
 alias mkcd='mcd'
 
-# 使用trash-cli来代替rm命令，参见：https://github.com/andreafrancia/trash-cli
+# 使用trash-cli来代替rm命令
+# 安装trash-cli：
+#    （注：以下两种安装方式都是全局安装，亦即安装后系统中的所有用户都可以使用trash-cli；
+#          但各用户家目录下的Trash文件夹将在第一次执行trash-put命令后才会创建）
+#     方法一：easy_install trash-cli
+#     方法二：git clone https://github.com/andreafrancia/trash-cli.git && cd trash-cli && sudo python setup.py install
+# 参见：https://github.com/andreafrancia/trash-cli
 # trash files and directories
 alias tp="trash-put"
 # empty the trashcan(s)
@@ -199,18 +208,20 @@ alias tm="trash-rm"
 #     crontab -e
 # 增加下面这一行到crontab文件中：
 #     @hourly /usr/bin/autotrash --max-free 10240 --min-free 5120 -d 360
-#     注：
-#         1）当可用空间小于10240MB(即10GB)时，开始删除超过360天的文件；
-#            当可用空间小于5120MB(即5GB)时，也删除小于360天的文件
-#         2）-T PATH --trash-path PATH : Use the given path as the location of
-#            the Trash directory, instead of the default: ~/.local/share/Trash.
-# 参见：https://github.com/bneijt/autotrash
+#     注：当可用空间小于10240MB(即10GB)时，开始删除超过360天的文件；
+#         当可用空间小于5120MB(即5GB)时，也删除小于360天的文件
+# 参见：https://github.com/bneijt/autotrash （注：该仓库README.md文档中给出的详细介绍链接无法打开，
+#       autotrash的更多详情，另可参见：http://manpages.ubuntu.com/manpages/bionic/man1/autotrash.1.html）
 
+# 注意：有些文件(比如crontab、visudo等)的编辑默认调用vi进行编辑，会导致出错，因此有必要
+#       将/usr/bin/vi软链接为/usr/bin/vim【注：可通过where和whereis命令查看vi和vim的路径】，
+#       这样在编辑crontab、visudo等文件时，不再调用vi进行编辑，而是调用vim进行编辑：
+#           ln -s /usr/bin/vim /usr/bin/vi
 alias vi='vim'
 alias vz="vim ~/.zshrc"
+alias vzb="vim /bak/rc-bak/.zshrc"
 alias sz="source ~/.zshrc"
 alias vb="vim ~/.bashrc"
-#alias vv='vim /etc/vimrc'
 alias vv='vim ~/.vimrc'
 alias vvb='vim /bak/rc-bak/.vimrc'
 
