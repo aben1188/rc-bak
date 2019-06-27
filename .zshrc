@@ -171,7 +171,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# 【注意：别名仅在交互式shell环境中有效，在非交互式shell环境中(比如shell脚本中)则无效】
+# 【注意：这里定义的别名仅在交互式shell环境中有效，在非交互式shell环境中(比如shell脚本中)则无效】
 
 # 默认情况下不允许直接使用rm命令
 # （注：当确实需要使用rm命令来删除文件时，可先通过执行echo rm <*或文件名>
@@ -542,7 +542,7 @@ setopt completealiases
 # 注：貌似oh-my-zsh已经提供该功能
 #zstyle ':completion::approximate:' max-errors 1 numeric
 
-# 消除历史记录中的重复条目
+# 自动消除历史记录中的重复条目
 # 注：若历史记录中已有重复条目，可手动执行下列命令进行清除：
 #     sort -t ";" -k 2 -u ~/.zsh_history | sort -o ~/.zsh_history
 setopt HIST_IGNORE_DUPS
