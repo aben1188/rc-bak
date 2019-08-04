@@ -92,26 +92,42 @@ ZSH_THEME="avit"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+    # git插件功能：当处于git受控目录时，zsh会明确提示(如显示分支信息“master”)；
+    # 另外，git插件还对很多git命令进行了别名简化，如g=’git’、gd=’git diff’、
+    # gco=’git checkout’、gst=’git status’等，熟练使用可大大提高git操作效率
     # 参见：https://github.com/robbyrussell/oh-my-zsh/wiki/Plugin:git
     git
+
     # dircycle插件功能：可使用Ctrl+Shift+left/right在目录之间来回移动
     # https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/dircycle
     dircycle
+
     # dirhistory插件功能：可用ALT-LEFT移动到用户过去更改的目录，ALT-RIGHT撤消ALT-LEFT，
     # ALT-UP移动到上层目录(相当于“cd ..”)，ALT-DOWN移动到按字母顺序找到的第一个目录
     # 参见：https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/dirhistory
     dirhistory
+
     # dirpersist插件功能：此插件保留$HOME/.zdirs文件中前20个唯一目录(即不重复)的运行记录。
     # 当转到新目录时，该新目录会被添加到$HOME/.zdirs文件的开头。 要使用该插件，必须将
     # dirpersist添加到.zshrc文件中的plugins数组中。
     # 参见：https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/dirpersist
     dirpersist
+
+    # vi-mode插件功能：zsh终端中默认使用的键盘映射为emacs-mode，习惯vim键盘绑定的可通过
+    # vi-mode插件来开启
     # 参见：https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/vi-mode
     vi-mode
-    # autojump插件可用基于fzf自定义的命令(函数)cf代替，可不必安装
+
+    # autojump插件：历史目录跳转插件；该插件可用z插件代替，z插件无需安装，直接启用即可；
+    # 另外，历史目录跳转功能一定程度上也可使用基于fzf自定义的命令(函数)cf来代替
     # 参见：https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/autojump
     #autojump
-    #ack
+    
+    # z插件：历史目录跳转插件；该插件无需安装，直接启用即可。z插件相当于autojump及其
+    # 升级版j插件(https://github.com/rupa/j)的升级版
+    # 参见：https://github.com/rupa/z
+    z
+    
     # 以下四个插件均来自：https://github.com/zsh-users
     zsh-autosuggestions
     zsh-completions
@@ -119,20 +135,30 @@ plugins=(
     # zsh-history-substring-search必须在zsh-syntax-highlighting之后启用
     #zsh-history-substring-search  # history-substring-search为其别名
     history-substring-search  #已经自带，不需要安装
+
+    # fzf插件：模糊查找(即模糊搜索)文件（fzf为fuzzy finder的缩写）
+    # 注：虽然新版oh-my-zsh已经自带该插件，可在~/.oh-my-zsh/plugins目录下找到，但还是
+    # 必须额外先安装才能使用
     # 参见：https://github.com/junegunn/fzf
     fzf
+
     # zsh-interactive-cd插件实际上不是oh-my-zsh的插件，因此不需要在这里启用（后文另有启用命令）
     # 参见：https://github.com/changyuheng/zsh-interactive-cd
     #zsh-interactive-cd  # 该插件基于fzf，必须先安装fzf
+    
     # 参见：https://link.zhihu.com/?target=https%3A//github.com/jeffkaufman/icdiff
     #icdiff
+    
     # 参见：https://link.zhihu.com/?target=https%3A//github.com/jakubroztocil/httpie/
     httpie
+
     # 参见：https://link.zhihu.com/?target=https%3A//github.com/dbcli/mycli
     #mycli
+    
     # 很遗憾，incr还是有些问题，只能弃用之，还是多敲一次Tab键吧
     # 参见：https://github.com/makeitjoe/incr.zsh
     #incr
+    
     # 注：auto-fu是一个很酷的命令及参数自动实时展示插件，但会导致vi-mode、ctrl-r
     # 等失效，还是使用incr插件部分代替其功能(实际上auto-fu就是基于incr开发的)，
     # 以及多按一些Tab键以使用zsh的自动展示与自动补全功能吧
