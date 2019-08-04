@@ -459,7 +459,7 @@ alias ggrin="grep -rniC1 -E --color=auto --include $@ 2>/dev/null"
 # gmt	                git mergetool --no-prompt
 # gmtvim	            git mergetool --no-prompt --tool = vimdiff
 # gmum	                git merge upstream/master
-# gp	                git push
+# gp	                git push  # 注：下面还同时自定义了gps="git push"
 # gpd	                git push --dry-run
 # gpoat	                git push origin --all && git push origin --tags
 # gpristine	            git reset --hard && git clean -dfx
@@ -522,7 +522,7 @@ alias gclr="git clone --recursive"
 alias gi="git init"
 alias gl="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 #alias gm="git merge"  # 注：上面已定义了同名别名
-alias gps="git push"
+alias gps="git push"  # 注：上面同时还定义了gp="git push"
 alias gpsom="git push origin master"
 alias gpl="git pull"  # 注：上面同时还定义了gl="git pull"
 alias gplom="git pull origin master"
