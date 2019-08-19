@@ -774,7 +774,8 @@ alias tf="tail -F -n 20"
 	# -C1：同时只显示匹配行的前后各1行
 	# -E：egrep, Extended grep（即egrep = grep -E）
 	# 使用grep查找文件内容时，对于没有查询权限的文件会不断出现Permission denied，导致不容易看到正确的查询结果，
-	# 而Permission denied属于错误，将错误(0为标准输入，1为标准输出，2为标准错误)重定向到黑洞文件/dev/null即可
+	# 而Permission denied属于错误，将错误(0为标准输入，1为标准输出，2为标准错误)重定向到黑洞文件/dev/null即可,
+	# 2>/dev/null相当于将错误不显示出来，也不写入文件，而是直接抛弃掉
 alias gg="grep -nC1 -E --color=auto $@ 2>/dev/null"  # 覆盖了git插件所定义的别名：gg="git gui citool"
 	# -i：不区分大小(即大小写不敏感)
 alias ggi="grep -niC1 -E --color=auto $@ 2>/dev/null"
