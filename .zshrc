@@ -779,6 +779,8 @@ alias tf="tail -F -n 20"
 	# 使用grep查找文件内容时，对于没有查询权限的文件会不断出现Permission denied，导致不容易看到正确的查询结果，
 	# 而Permission denied属于错误，将错误(0为标准输入，1为标准输出，2为标准错误)重定向到黑洞文件/dev/null即可,
 	# 因此，2>/dev/null相当于将错误不显示出来，也不写入文件，而是直接抛弃掉
+    # 注意：使用正则表达式(包括基本正则表达式和扩展正则表达式)匹配时，正则表达式必须用单引号引用(不能使用双引号，
+    #       因为.、*、？等字符会被命令行展开)
 alias gg="grep -nC1 -E --color=auto $@ 2>/dev/null"  # 覆盖了git插件所定义的别名：gg="git gui citool"
 	# -i：不区分大小(即大小写不敏感)
 alias ggi="grep -niC1 -E --color=auto $@ 2>/dev/null"
@@ -787,8 +789,8 @@ alias ggi="grep -niC1 -E --color=auto $@ 2>/dev/null"
 alias ggr="grep -rnC1 -E --color=auto $@ 2>/dev/null"
 	# 递归查找文件内容(不区分大小写)
 alias ggri="grep -rniC1 -E --color=auto $@ 2>/dev/null"
-	# -o：只输出匹配正则表达式的字符串，而非输出整个匹配行(gnu新版独有, 并非所有版本都支持)
-	#     该选项仅显示匹配行中与正则表达式PATTERN相匹配的字符串
+	# -o：只输出匹配正则表达式的字符串，而非输出匹配字符串所在的整行(gnu新版独有, 并非所有版本都支持)
+	#     该选项仅显示匹配行中与正则表达式PATTERN相匹配的字符串，而非默认显示匹配字符串所在的整个行
 alias ggrio="grep -rniC1 -oE --color=auto $@ 2>/dev/null"
 	# 递归查找文件内容(不区分大小写，且只在指定文件类型中查找)
 	# 比如：grep -rn --include='*.c' --include='*.h' re  或写作：
