@@ -1066,6 +1066,9 @@ echo_rm_hint() {
 pathReg1="^/$|^/\*$|^/bin/?$|^/data/?$|^/etc/?$|^/media/?$|^/opt/?$|^/sbin/?$|^/usr/?$|^/var/?$|^/root/?$|^/home/?$|^/lib/?$|^/lib64/?$|^/test/?$"
 pathReg2="^/bin/.+|^/data/.+|^/etc/.+|^/media/.+|^/opt/.+|^/sbin/.+|^/usr/.+|^/var/.+|^/root/.+|^/home/.+|^/lib/.+|^/lib64/.+|^/test/.+"
 
+    # 防止误移动根目录下的文件夹从而导致损坏操作系统
+    # 引用该函数前必须先关闭命令行glob通配符解析，比如通过setopt命令：setopt nogolb，以便于$1能获得
+    # 所输入的mv命令的参数“/*”进行正则匹配，匹配完毕后，必须记得再次打开glob通配符解析：setopt glob
 mv_command_hint() {
     #echo $1
     if [[ "$1" =~ $pathReg1 ]]; then
@@ -1095,6 +1098,7 @@ mv_command_hint() {
     #echo $1
 }
 
+    # 本函数功能上与mv_command_hint差不多
 trash-put_command_hint() {
     #echo $1
     if [[ "$1" =~ $pathReg1 ]]; then
