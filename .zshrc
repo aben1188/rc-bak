@@ -636,6 +636,9 @@ alias sudo='sudo '
 
 alias mkcd='mcd'
 
+    # 防止误移动根目录下的文件夹从而导致损坏操作系统
+    # 引用该函数前必须先关闭命令行glob通配符解析，比如通过setopt命令：setopt nogolb，以便于$1能获得
+    # 所输入的mv命令的参数“/*”进行正则匹配，匹配完毕后，必须记得再次打开glob通配符解析：setopt glob
 alias mv="setopt noglob; mv_command_hint"
 
 	# 使用trash-cli来代替rm命令
