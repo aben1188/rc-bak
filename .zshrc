@@ -625,6 +625,26 @@ fi
 
 # 【【注意：这里定义的别名仅在交互式shell环境中有效，在非交互式shell环境中(比如shell脚本中)则无效】】
 
+	# 注意：有些文件(比如crontab、visudo等)的编辑默认调用vi进行编辑，会导致出错，因此有必要
+	#       将/usr/bin/vi软链接为/usr/bin/vim【注：可通过where和whereis命令查看vi和vim的路径】，
+	#       这样在编辑crontab、visudo等文件时，不再调用vi进行编辑，而是调用vim进行编辑：
+	#           ln -s /usr/bin/vim /usr/bin/vi
+alias vi='vim'
+alias vz="vim ~/.zshrc"
+alias vzb="vim /bak/rc-bak/.zshrc"
+alias sz="source ~/.zshrc"
+alias vb="vim ~/.bashrc"
+alias vv='vim ~/.vimrc'
+alias vvb='vim /bak/rc-bak/.vimrc'
+
+if [[ $USER == "root" ]]; then
+    alias tpzswp="tp ~/.vim/swapfiles/%$USER%.zshrc.swp"
+    alias tpvswp="tp ~/.vim/swapfiles/%$USER%.vimrc.swp"
+else
+    alias tpzswp="tp ~/.vim/swapfiles/%home%$USER%.zshrc.swp"
+    alias tpvswp="tp ~/.vim/swapfiles/%home%$USER%.vimrc.swp"
+fi
+
 	# 默认情况下不允许直接使用rm命令
 	# （注：当确实需要使用rm命令来删除文件时，可先通过执行echo rm <*或文件名>
 	# 来看下可能将删除哪些文件，这在使用*通配符删除文件时尤其有用）
@@ -671,31 +691,11 @@ alias tm="trash-rm"
 	# 参见：https://github.com/bneijt/autotrash （注：该仓库README.md文档中给出的详细介绍链接无法打开，
 	#       autotrash的更多详情，另可参见：http://manpages.ubuntu.com/manpages/bionic/man1/autotrash.1.html）
 
-	# 注意：有些文件(比如crontab、visudo等)的编辑默认调用vi进行编辑，会导致出错，因此有必要
-	#       将/usr/bin/vi软链接为/usr/bin/vim【注：可通过where和whereis命令查看vi和vim的路径】，
-	#       这样在编辑crontab、visudo等文件时，不再调用vi进行编辑，而是调用vim进行编辑：
-	#           ln -s /usr/bin/vim /usr/bin/vi
-alias vi='vim'
-alias vz="vim ~/.zshrc"
-alias vzb="vim /bak/rc-bak/.zshrc"
-alias sz="source ~/.zshrc"
-alias vb="vim ~/.bashrc"
-alias vv='vim ~/.vimrc'
-alias vvb='vim /bak/rc-bak/.vimrc'
-
-if [[ $USER == "root" ]]; then
-    alias tpzswp="tp ~/.vim/swapfiles/%$USER%.zshrc.swp"
-    alias tpvswp="tp ~/.vim/swapfiles/%$USER%.vimrc.swp"
-else
-    alias tpzswp="tp ~/.vim/swapfiles/%home%$USER%.zshrc.swp"
-    alias tpvswp="tp ~/.vim/swapfiles/%home%$USER%.vimrc.swp"
-fi
-
 alias cls='clear'
 alias ll='ls --color -ail'
 alias la='ls --color -ai'
 
-	# -a：所有，-n：不显示别名形式，显示数字形式，-p：显示进程信息，
+	# -a：所有，-n：不显示别名形式，而是显示数字形式，-p：显示进程信息，
 	# -l：仅显示正在监听的端口，-t：仅显示tcp连接，-u：仅显示udp连接
 	# 查看所有的网络相关信息，如连接、端口、路由表等
 alias nsa="netstat -anp"
@@ -713,6 +713,7 @@ alias nsatu="netstat -atunp"
 alias nsatg="netstat -anpt|grep -nC1 --color=auto"
 	# 查看指定的网络相关信息(不区分大小写)，如连接、端口、路由表等
 alias nsatgi="netstat -anpt|grep -niC1 --color=auto"
+
 	# 使用find查找文件时，对于没有查询权限的目录会不断出现Permission denied，导致不容易看到正确的查询结果，
 	# 而Permission denied属于错误，将错误(0为标准输入，1为标准输出，2为标准错误)重定向到黑洞文件/dev/null即可
 	# 从根目录开始递归查找指定的文件名(区分大小写)
@@ -732,6 +733,7 @@ alias ul="updatedb && locate"
 alias li="locate -i"
 	# 先更新搜索数据库，再快速查找文件(默认为全局查找，即默认为相当于从根目录开始递归查找)（不区分大小写）
 alias uli="updatedb && locate -i"
+
 	# 树状形式显示所有进程信息(p代表ps，t代表tree)
 alias pt='ps axjf'
 	# 树状形式查看指定的进程状态(区分大小写)
@@ -743,6 +745,7 @@ alias ptgi="pt|grep -v grep|grep -niC1 --color=auto"
 alias pg="ps aux|grep -v grep|grep -nC1 --color=auto"
 	# 查看指定的进程状态(不区分大小写)
 alias pgi="ps aux|grep -v grep|grep -niC1 --color=auto"
+
 	# 查看当前系统用户列表：vul = view user list
 alias vul="cat /etc/passwd|grep -v nologin|grep -v halt|grep -v shutdown"
 alias vula="cat /etc/passwd|grep -v nologin|grep -v halt|grep -v shutdown|awk -F\":\" '{ print $1\"|\"$3\"|\"$4 }'|more"
@@ -1068,6 +1071,7 @@ echo_rm_hint() {
     echo Don\'t use \'rm\'. Try to use trash related commands.; false
 }
 
+    # 这里定义的两个用于匹配路径的正则表达式用于下面的多个函数中
 pathReg1="^/$|^/\*$|^/bin/?$|^/data/?$|^/etc/?$|^/media/?$|^/opt/?$|^/sbin/?$|^/usr/?$|^/var/?$|^/root/?$|^/home/?$|^/lib/?$|^/lib64/?$|^/test/?$"
 pathReg2="^/bin/.+|^/data/.+|^/etc/.+|^/media/.+|^/opt/.+|^/sbin/.+|^/usr/.+|^/var/.+|^/root/.+|^/home/.+|^/lib/.+|^/lib64/.+|^/test/.+"
 
