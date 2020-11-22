@@ -29,16 +29,9 @@
 " it can automatically download the plug.vim and put it in the 'autoload' directory
 "if empty(glob(s:vimdatapath . 'autoload/plug.vim'))
 if (has('win32') || has('win64')) && empty(glob('~/vimfiles/autoload/plug.vim'))
-    " Windows系统中，需通过手动在PowerShell中执行下列命令来下载安装vim-plug：
-    "     md ~\vimfiles\autoload
-    "     $uri = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    "     (New-Object Net.WebClient).DownloadFile(
-    "       $uri,
-    "       $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
-    "         '~\vimfiles\autoload\plug.vim'
-    "       )
-    "     )
-    echoerr "Sorry, please manually install vim-plug first in Windows.
+    " Windows系统中，需通过手动在PowerShell中执行命令来下载安装vim-plug，详见：
+    "     https://github.com/junegunn/vim-plug
+    echoerr "For Windows, you need to manually install vim-plug first.
                 \ For details, see here: https://github.com/junegunn/vim-plug."
     finish
 elseif (has('unix') || has('mac')) && empty(glob('~/.vim/autoload/plug.vim'))
