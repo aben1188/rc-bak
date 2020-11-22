@@ -8,13 +8,13 @@
 "..................................................
 " vim-plug简要帮助(常用命令)
 "..................................................
-" :PlugInstall [name ...] [#threads]  - Install plugins
-" :PlugUpdate [name ...] [#threads]	  - Install or update plugins
+" :PlugInstall [name ...] [#threads]  - Install plugins【注：不加参数时，将安装所有插件】
+" :PlugUpdate [name ...] [#threads]   - Install or update plugins
 " :PlugClean[!]	                      - Remove unused directories (bang version will clean without prompt)
 " :PlugUpgrade	                      - Upgrade vim-plug itself
 " :PlugStatus	                      - Check the status of plugins
-" :PlugDiff	                          - Examine changes from the previous update and the pending changes
-" :PlugSnapshot[!] [output path]	  - Generate script for restoring the current snapshot of the plugins
+" :PlugDiff	                      - Examine changes from the previous update and the pending changes
+" :PlugSnapshot[!] [output path]      - Generate script for restoring the current snapshot of the plugins
 "
 " See also vim-plug official website: https://github.com/junegunn/vim-plug
 "..................................................
@@ -440,13 +440,13 @@ call plug#end()"
 "..................................................
 " vim-plug简要帮助(常用命令)
 "..................................................
-" :PlugInstall [name ...] [#threads]  - Install plugins
-" :PlugUpdate [name ...] [#threads]	  - Install or update plugins
+" :PlugInstall [name ...] [#threads]  - Install plugins【注：不加参数时，将安装所有插件】
+" :PlugUpdate [name ...] [#threads]   - Install or update plugins
 " :PlugClean[!]                       - Remove unused directories (bang version will clean without prompt)
 " :PlugUpgrade	                      - Upgrade vim-plug itself
 " :PlugStatus	                      - Check the status of plugins
-" :PlugDiff	                          - Examine changes from the previous update and the pending changes
-" :PlugSnapshot[!] [output path]	  - Generate script for restoring the current snapshot of the plugins
+" :PlugDiff	                      - Examine changes from the previous update and the pending changes
+" :PlugSnapshot[!] [output path]      - Generate script for restoring the current snapshot of the plugins
 "
 " see also vim-plug official website: https://github.com/junegunn/vim-plug
 "..................................................
