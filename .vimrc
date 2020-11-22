@@ -1,4 +1,4 @@
-" Vim启动时，若加上--startuptime参数，可查看其启动加载过程中每一步所耗费的 
+" Vim通过命令行启动时，若加上--startuptime参数，可查看其启动加载过程中每一步所耗费的 
 " 详细时间以及耗费的总时间，比如：
 "     vim --startuptime 'vimStartupTime.txt' 
 
